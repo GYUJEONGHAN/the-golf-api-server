@@ -1,26 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const User = require("./src/User/userModel");
-const Admin = require("./src/Admin/adminModel");
+const bodyParser = require("body-parser");
+
+const app = express();
+app.set("port", process.env.PORT || 3000);
+
+app.use(bodyParser.json());
+
+// MongoDB와의 연결 설정
 
 const MONGODB_ID = "kimsuhyun";
 const MONGODB_PASSWORD = "suhyun90%40";
 const MONGODB_ENDPOINT = "cluster0.n3gcvs0.mongodb.net";
 const MONGODB_DB = "practice";
-
-const app = express();
-const port = 4567;
-
-app.use(express.json());
-const userRouter = require("./src/User/userRouter");
-app.use("/user", userRouter);
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-// 웹, 컨트롤러, 라우터
-// MongoDB와의 연결 설정
 
 mongoose
   .connect(
@@ -30,6 +22,22 @@ mongoose
   .then(() => console.log("Successfully connected to mongodb"))
   .catch((e) => console.error(e));
 
-app.listen(port, () => {
-  console.log(`서버가 ${port}번 포트에서 실행되었습니다.`);
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+// user 라우터 등록
+const userRouter = require("./src/User/userRouter");
+app.use("/user", userRouter);
+
+// product 라우터 등록
+const productRouter = require("./src/Product/productRouter");
+app.use("/products", productRouter);
+
+// category 라우터 등록
+const categoryRouter = require("./src/Category/categoryRouter");
+app.use("/category", categoryRouter);
+
+app.listen(app.get("port"), () => {
+  console.log(app.get("port"), "번 포트에서 대기 중");
 });

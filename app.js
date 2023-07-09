@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 
 // user 라우터 등록
 const userRouter = require("./src/User/userRouter");
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 
 // product 라우터 등록
 const productRouter = require("./src/Product/productRouter");

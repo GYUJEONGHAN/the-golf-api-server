@@ -27,16 +27,20 @@ app.get("/", (req, res) => {
 });
 
 // user 라우터 등록
-const userRouter = require("./src/User/userRouter");
+const userRouter = require("./src/user/userRouter");
 app.use("/users", userRouter);
 
 // product 라우터 등록
-const productRouter = require("./src/Product/productRouter");
+const productRouter = require("./src/product/productRouter");
 app.use("/products", productRouter);
 
 // category 라우터 등록
-const categoryRouter = require("./src/Category/categoryRouter");
+const categoryRouter = require("./src/category/categoryRouter");
 app.use("/category", categoryRouter);
+
+// admin 라우터 등록
+const adminRouter = require("./src/admin/adminRouter");
+app.use("/admin", adminRouter);
 
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기 중");

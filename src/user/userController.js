@@ -2,10 +2,17 @@ const userService = require("./userService");
 
 const signUp = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const result = await userService.signUp(email, password);
+    //수정 전 (에러): 모든 path가 required 인데 email, password만 받아와서 발생
+    //const { email, password } = req.body;
+    //const result = await userService.signUp(email, password);
+
+    //전체 데이터 전달하도록 변경
+    const userData = req.body;
+    const result = await userService.signUp(userData);
+
     res.json(result);
   } catch (error) {
+    console.error(error); // 에러 출력
     res.status(500).json({ error: "회원가입 중 오류가 발생했습니다." });
   }
 };

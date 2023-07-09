@@ -15,7 +15,7 @@ const createCategory = async (req, res) => {
 // 카테고리 수정
 const updateCategory = async (req, res) => {
   try {
-    const { categoryID } = req.params;
+    const { categoryId } = req.params;
     const categoryData = req.body;
     const updatedCategory = await categoryService.updateCategory(
       categoryId,

@@ -1,15 +1,14 @@
-const Category = require("./categoryModel");
+const category = require("./categoryModel");
 
 // 카테고리 생성
 const createCategory = async (categoryData) => {
-  const category = new Category(categoryData);
-  await category.save();
-  return category;
+  const targetCategory = new category(categoryData);
+  return await targetCategory.save();
 };
 
 // 카테고리 수정
 const updateCategory = async (categoryId, categoryData) => {
-  const updatedCategory = await Category.findByIdAndUpdate(
+  const updatedCategory = await category.findByIdAndUpdate(
     categoryId,
     categoryData,
     { new: true }
@@ -19,19 +18,18 @@ const updateCategory = async (categoryId, categoryData) => {
 
 // 카테고리 삭제
 const deleteCategory = async (categoryId) => {
-  const deletedProduct = await Category.findByIdAndDelete(categoryId);
-  return deletedProduct;
+  return await category.findByIdAndDelete(categoryId);
 };
 
 // 상품 조회
 const getCategoryById = async (categoryId) => {
-  const category = await Category.findById(categoryId);
-  return category;
+  const targetCategory = await category.findById(categoryId);
+  return targetCategory;
 };
 
 // 상품 목록 조회
 const getAllCategories = async () => {
-  const categories = await Category.find({});
+  const categories = await category.find({});
   return categories;
 };
 

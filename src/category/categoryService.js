@@ -23,14 +23,12 @@ const deleteCategory = async (categoryId) => {
 
 // 상품 조회
 const getCategoryById = async (categoryId) => {
-  const targetCategory = await category.findById(categoryId);
-  return targetCategory;
+  return await category.findById(categoryId);
 };
 
 // 상품 목록 조회
 const getAllCategories = async () => {
-  const categories = await category.find({});
-  return categories;
+  return await category.find({});
 };
 
 module.exports = {

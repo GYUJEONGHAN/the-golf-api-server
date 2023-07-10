@@ -3,17 +3,17 @@ const upload = require("./multer");
 const productRouter = express.Router();
 const productController = require("./productController");
 
-// 상품 생성 (multer 미들웨어 추가)
+// 상품 생성
 productRouter.post(
   "/",
-  upload.single("image"),
+  upload.array("images", 2), // 'images' 필드에서 최대 2개의 이미지를 받음
   productController.createProduct
 );
 
 // 상품 수정
 productRouter.put(
   "/:productId",
-  upload.single("image"),
+  upload.array("images", 2),
   productController.updateProduct
 );
 

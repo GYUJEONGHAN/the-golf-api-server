@@ -1,12 +1,13 @@
 const productService = require("./productService");
 const fs = require("fs");
+const upload = require("./multer");
 
 //상품 생성
 const createProduct = async (req, res) => {
   try {
     const productData = {
       ...req.body,
-      image: req.file ? req.file.path : null,
+      images: req.files ? req.files.map((file) => file.path) : [], //여러 이미지 처리
     };
 
     const product = await productService.createProduct(productData);
@@ -17,18 +18,18 @@ const createProduct = async (req, res) => {
   }
 };
 
-//상품 수정
+// 상품 수정
 const updateProduct = async (req, res) => {
   try {
     const { productId } = req.params;
 
-    //기존 이미지 path 저장
+    // 기존 이미지 paths 저장
     const existingProduct = await productService.getProductById(productId);
-    const previousImagePath = existingProduct.image;
+    const previousImagePaths = existingProduct.images || [];
 
     const productData = {
       ...req.body,
-      image: req.file ? req.file.path : null,
+      images: req.files ? req.files.map((file) => file.path) : [],
     };
 
     const updatedProduct = await productService.updateProduct(
@@ -36,14 +37,16 @@ const updateProduct = async (req, res) => {
       productData
     );
 
-    // 만약 이미지 파일이 들어왔고, 이전 이미지가 존재한다면 이전 이미지 삭제
-    if (req.file && previousImagePath) {
-      fs.unlinkSync(previousImagePath);
+    // 이미지 파일이 들어왔고, 이전 이미지가 존재한다면 이전 이미지 삭제
+    if (req.files.length > 0 && previousImagePaths.length > 0) {
+      for (const imagePath of previousImagePaths) {
+        fs.unlinkSync(imagePath);
+      }
     }
 
     res.status(200).json({ success: true, product: updatedProduct });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ success: false, error: "잘못된 요청입니다." });
   }
 };
@@ -53,7 +56,7 @@ const deleteProduct = async (req, res) => {
   try {
     const { productId } = req.params;
     const existingProduct = await productService.getProductById(productId);
-    const previousImagePath = existingProduct.image;
+    const previousImagePaths = existingProduct.images || [];
 
     const deletedProduct = await productService.deleteProduct(productId);
     if (!deletedProduct) {
@@ -62,9 +65,11 @@ const deleteProduct = async (req, res) => {
         .json({ success: false, message: "Product not found" });
     }
 
-    // 만약 이전 이미지가 존재한다면 이전 이미지 삭제
-    if (previousImagePath) {
-      fs.unlinkSync(previousImagePath);
+    // 이전 이미지들 삭제
+    if (previousImagePaths.length > 0) {
+      for (const imagePath of previousImagePaths) {
+        fs.unlinkSync(imagePath);
+      }
     }
 
     res.status(200).json({ success: true, message: "삭제 완료" });

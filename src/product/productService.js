@@ -2,24 +2,24 @@ const product = require("./productModel");
 
 // 상품 생성
 const createProduct = async (productData) => {
-  const { image, ...restData } = productData;
-  const imagePath = image || null; // 이미지 경로를 그대로 저장
+  const { images, ...restData } = productData;
 
   const targetProduct = new product({
     ...restData,
-    image: imagePath,
+    images: images || [], // 복수의 이미지 경로를 그대로 저장
   });
 
   return await targetProduct.save();
 };
 
+// 상품 수정
 const updateProduct = async (productId, productData) => {
-  const { image, ...restData } = productData;
-  const imagePath = image || null; // 이미지 경로를 그대로 저장
+  const { images, ...restData } = productData;
+  const imagePaths = images || []; // 이미지 경로들을 그대로 저장
 
   const updatedProduct = await product.findByIdAndUpdate(
     productId,
-    { ...restData, image: imagePath }, // 이미지 경로를 업데이트
+    { ...restData, images: imagePaths }, // 이미지 경로들을 업데이트
     { new: true }
   );
   return updatedProduct;

@@ -31,10 +31,17 @@ const getAllCategories = async () => {
   return await category.find({});
 };
 
+// 카테고리 ID 유효성 검사
+const isValidCategory = async (categoryId) => {
+  const targetCategory = await category.findById(categoryId);
+  return targetCategory ? true : false;
+};
+
 module.exports = {
   createCategory,
   updateCategory,
   deleteCategory,
   getCategoryById,
   getAllCategories,
+  isValidCategory,
 };

@@ -1,4 +1,6 @@
 const productService = require("./productService");
+const categoryService = require("../category/categoryService");
+
 const fs = require("fs");
 const upload = require("./multer");
 
@@ -9,6 +11,16 @@ const createProduct = async (req, res) => {
       ...req.body,
       images: req.files ? req.files.map((file) => file.path) : [], // 여러 이미지 처리
     };
+
+    // 카테고리 ID 유효성 검사
+    const isValidCategory = await categoryService.isValidCategory(
+      productData.category
+    );
+    if (!isValidCategory) {
+      return res
+        .status(400)
+        .json({ success: false, error: "유효하지 않은 카테고리입니다." });
+    }
 
     const product = await productService.createProduct(productData);
     res.status(201).json({ success: true, product });
@@ -31,6 +43,18 @@ const updateProduct = async (req, res) => {
       ...req.body,
       images: req.files ? req.files.map((file) => file.path) : [],
     };
+
+    // 카테고리 ID 유효성 검사
+    if (productData.category) {
+      const isValidCategory = await categoryService.isValidCategory(
+        productData.category
+      );
+      if (!isValidCategory) {
+        return res
+          .status(400)
+          .json({ success: false, error: "유효하지 않은 카테고리입니다." });
+      }
+    }
 
     const updatedProduct = await productService.updateProduct(
       productId,

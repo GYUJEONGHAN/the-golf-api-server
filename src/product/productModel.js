@@ -17,6 +17,6 @@ const productSchema = new Schema({
   isForBeginner: { type: String, default: null }, // 초심자 용품 확인 변수
 });
 
-const Product = mongoose.model("Product", productSchema);
+const product = mongoose.model("Product", productSchema);
 
-module.exports = Product;
+module.exports = product;

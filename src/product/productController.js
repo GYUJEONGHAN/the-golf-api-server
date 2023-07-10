@@ -46,6 +46,7 @@ const updateProduct = async (req, res) => {
 
     // 카테고리 ID 유효성 검사
     if (productData.category) {
+      //만약 카테고리 id가 들어왔다면
       const isValidCategory = await categoryService.isValidCategory(
         productData.category
       );

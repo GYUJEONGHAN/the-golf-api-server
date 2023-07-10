@@ -76,6 +76,18 @@ const deleteProduct = async (req, res) => {
 // 모든 상품 삭제
 const deleteAllProducts = async (req, res) => {
   try {
+    // 이미지 폴더 경로
+    const imageDirectory = "src/product/productImages/";
+
+    // 폴더 내의 모든 파일과 폴더 가져오기
+    const files = fs.readdirSync(imageDirectory);
+
+    // 파일과 폴더 삭제
+    files.forEach((file) => {
+      const filePath = imageDirectory + file;
+      fs.unlinkSync(filePath);
+    });
+
     await productService.deleteAllProducts();
     res
       .status(200)

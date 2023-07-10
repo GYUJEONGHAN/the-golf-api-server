@@ -2,12 +2,12 @@ const productService = require("./productService");
 const fs = require("fs");
 const upload = require("./multer");
 
-//상품 생성
+// 상품 생성
 const createProduct = async (req, res) => {
   try {
     const productData = {
       ...req.body,
-      images: req.files ? req.files.map((file) => file.path) : [], //여러 이미지 처리
+      images: req.files ? req.files.map((file) => file.path) : [], // 여러 이미지 처리
     };
 
     const product = await productService.createProduct(productData);

@@ -7,11 +7,10 @@ const productSchema = new Schema({
   price: { type: Number, required: true },
   images: [{ type: String }], // 복수의 이미지를 배열로 저장
   brand: { type: String },
-  description: { type: String },
-  size: { type: String },
+  size: [{ type: String }],
   color: { type: String },
   stock: { type: Number, default: 0 },
-  isForBeginner: { type: String, default: null },
+  isForBeginner: { type: String, default: null }, //초심자 용품 확인변수
 });
 
 const product = mongoose.model("Product", productSchema);

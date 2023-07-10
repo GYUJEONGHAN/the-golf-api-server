@@ -1,4 +1,5 @@
 const productService = require("./productService");
+const fs = require("fs");
 
 //상품 생성
 const createProduct = async (req, res) => {
@@ -16,22 +17,33 @@ const createProduct = async (req, res) => {
   }
 };
 
-// 상품 수정
+//상품 수정
 const updateProduct = async (req, res) => {
   try {
     const { productId } = req.params;
-    const productData = req.body;
+
+    //기존 이미지 path 저장
+    const existingProduct = await productService.getProductById(productId);
+    const previousImagePath = existingProduct.image;
+
+    const productData = {
+      ...req.body,
+      image: req.file ? req.file.path : null,
+    };
+
     const updatedProduct = await productService.updateProduct(
       productId,
       productData
     );
-    if (!updatedProduct) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+
+    // 만약 이미지 파일이 들어왔고, 이전 이미지가 존재한다면
+    if (req.file && previousImagePath) {
+      fs.unlinkSync(previousImagePath);
     }
+
     res.status(200).json({ success: true, product: updatedProduct });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ success: false, error: "잘못된 요청입니다." });
   }
 };

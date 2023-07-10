@@ -11,7 +11,11 @@ productRouter.post(
 );
 
 // 상품 수정
-productRouter.put("/:productId", productController.updateProduct);
+productRouter.put(
+  "/:productId",
+  upload.single("image"),
+  productController.updateProduct
+);
 
 // 상품 삭제
 productRouter.delete("/:productId", productController.deleteProduct);

@@ -13,11 +13,13 @@ const createProduct = async (productData) => {
   return await targetProduct.save();
 };
 
-// 상품 수정
 const updateProduct = async (productId, productData) => {
+  const { image, ...restData } = productData;
+  const imagePath = image || null; // 이미지 경로를 그대로 저장
+
   const updatedProduct = await product.findByIdAndUpdate(
     productId,
-    productData,
+    { ...restData, image: imagePath }, // 이미지 경로를 업데이트
     { new: true }
   );
   return updatedProduct;

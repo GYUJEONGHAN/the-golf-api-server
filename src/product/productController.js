@@ -1,9 +1,13 @@
 const productService = require("./productService");
 
-// 상품 생성
+//상품 생성
 const createProduct = async (req, res) => {
   try {
-    const productData = req.body;
+    const productData = {
+      ...req.body,
+      image: req.file ? req.file.path : null,
+    };
+
     const product = await productService.createProduct(productData);
     res.status(201).json({ success: true, product });
   } catch (error) {
@@ -48,6 +52,25 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// 모든 상품 삭제
+const deleteAllProducts = async (req, res) => {
+  try {
+    await productService.deleteAllProducts();
+    res
+      .status(200)
+      .json({ success: true, message: "모든 상품이 삭제되었습니다." });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ success: false, error: "상품 삭제에 실패했습니다." });
+  }
+};
+
+module.exports = {
+  deleteAllProducts,
+};
+
 // 상품 조회
 const getProductById = async (req, res) => {
   try {
@@ -89,6 +112,7 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  deleteAllProducts,
   getProductById,
   getAllProducts,
   searchProducts,

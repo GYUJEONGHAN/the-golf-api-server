@@ -36,7 +36,7 @@ const updateProduct = async (req, res) => {
       productData
     );
 
-    // 만약 이미지 파일이 들어왔고, 이전 이미지가 존재한다면
+    // 만약 이미지 파일이 들어왔고, 이전 이미지가 존재한다면 이전 이미지 삭제
     if (req.file && previousImagePath) {
       fs.unlinkSync(previousImagePath);
     }
@@ -52,12 +52,21 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const { productId } = req.params;
+    const existingProduct = await productService.getProductById(productId);
+    const previousImagePath = existingProduct.image;
+
     const deletedProduct = await productService.deleteProduct(productId);
     if (!deletedProduct) {
       return res
         .status(404)
         .json({ success: false, message: "Product not found" });
     }
+
+    // 만약 이전 이미지가 존재한다면 이전 이미지 삭제
+    if (previousImagePath) {
+      fs.unlinkSync(previousImagePath);
+    }
+
     res.status(200).json({ success: true, message: "삭제 완료" });
   } catch (error) {
     res.status(500).json({ success: false, error: "잘못된 요청입니다." });

@@ -36,6 +36,7 @@ const commonUserValidateScheme = {
       "string.pattern.base": "휴대폰 번호 형식이 올바르지 않습니다.",
       "any.required": "휴대폰 번호는 필수 입력 항목입니다.",
     }),
+  isAdmin: Joi.boolean(),
 };
 
 const signUpValidator = Joi.object(commonUserValidateScheme);

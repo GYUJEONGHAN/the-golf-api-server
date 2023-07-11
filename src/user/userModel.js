@@ -15,15 +15,15 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   address: {
-    type: String,
-    //required: true,
-  },
-  zipcode: {
-    type: String,
+    type: {
+      streetAddress: { type: String },
+      detailAddress: { type: String },
+      postalCode: { type: String },
+    },
     //required: true,
   },
   birthdate: {
-    type: String,
+    type: Date,
     //required: true,
   },
   phoneNumber: {

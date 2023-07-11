@@ -16,24 +16,24 @@ const userSchema = new mongoose.Schema({
   },
   address: {
     type: String,
-    required: true,
+    //required: true,
   },
   zipcode: {
     type: String,
-    required: true,
+    //required: true,
   },
   birthdate: {
     type: String,
-    required: true,
+    //required: true,
   },
   phoneNumber: {
     type: String,
-    required: true,
+    //required: true,
   },
-  // deleteAt: {
-  //   default: null,
-  //   type: Date,
-  // },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const User = mongoose.model("User", userSchema);

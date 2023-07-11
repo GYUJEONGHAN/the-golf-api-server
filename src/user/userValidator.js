@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const signUpValidator = Joi.object({
+const commonUserValidateScheme = {
   password: Joi.string()
     .pattern(
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,15}$/
@@ -37,10 +37,52 @@ const signUpValidator = Joi.object({
       "string.pattern.base": "휴대폰 번호 형식이 올바르지 않습니다.",
       "any.required": "휴대폰 번호는 필수 입력 항목입니다.",
     }),
-});
-
-const validateSignUp = (userData) => {
-  return signUpSchema.validate(userData, { abortEarly: false });
 };
 
-module.exports = { signUpValidator };
+const signUpValidator = Joi.object(commonUserValidateScheme);
+
+const changePasswordValidator = Joi.object({
+  previousPassword: Joi.string()
+    .pattern(
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,15}$/
+    )
+    .required()
+    .messages({
+      "string.pattern.base": "기존 비밀번호가 형식에 맞지 않습니다.",
+      "any.required": "기존 비밀번호는 필수 입력 항목입니다.",
+    }),
+  password: Joi.string()
+    .pattern(
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,15}$/
+    )
+    .required()
+    .messages({
+      "string.pattern.base": "비밀번호 형식에 맞지 않습니다.",
+      "any.required": "비밀번호는 필수 입력 항목입니다.",
+    }),
+});
+
+const updateUserValidator = Joi.object({
+  name: Joi.string()
+    .pattern(/^[가-힣]{2,4}$/)
+    .messages({
+      "string.pattern.base": "이름은 한글 2~4자여야 합니다.",
+    }),
+  address: Joi.object({
+    streetAddress: Joi.string().required(),
+    detailAddress: Joi.string().required(),
+    postalCode: Joi.string().required().length(5),
+  }),
+  birthdate: Joi.date(),
+  phoneNumber: Joi.string()
+    .pattern(/010-\d{4}-\d{4}/)
+    .messages({
+      "string.pattern.base": "휴대폰 번호 형식이 올바르지 않습니다.",
+    }),
+});
+
+module.exports = {
+  signUpValidator,
+  updateUserValidator,
+  changePasswordValidator,
+};

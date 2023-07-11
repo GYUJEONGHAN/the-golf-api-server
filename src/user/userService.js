@@ -4,7 +4,11 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const dontev = require("dotenv").config();
 const secretKey = process.env.SECRET_KEY;
-const { signUpValidator } = require("./userValidator");
+const {
+  signUpValidator,
+  updateUserValidator,
+  changePasswordValidator,
+} = require("./userValidator");
 
 // 회원 가입,
 const signUp = async (userData) => {
@@ -65,11 +69,47 @@ const getAllUsers = async () => {
   return users;
 };
 
+const changePassword = async (userId, userData) => {
+  const { value: cleanUserData, error } =
+    changePasswordValidator.validate(userData);
+
+  if (error) {
+    throw error;
+  }
+
+  try {
+    const willUpdateUser = await User.findById(userId);
+
+    const passwordMatch = await bcrypt.compare(
+      cleanUserData.previousPassword,
+      willUpdateUser.password
+    );
+
+    if (!passwordMatch) {
+      throw "기존 비밀번호가 올바르지 않습니다.";
+      return;
+    }
+
+    willUpdateUser.password = await bcrypt.hash(cleanUserData.password, 10);
+    willUpdateUser.save();
+
+    return willUpdateUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // 회원 정보 수정
 const updateUser = async (userId, userData) => {
+  const { value: cleanUserData, error } =
+    updateUserValidator.validate(userData);
+
+  if (error) {
+    throw error;
+  }
+
   try {
-    userData._id = userId;
-    const updatedUser = await User.findByIdAndUpdate(userId, userData, {
+    const updatedUser = await User.findByIdAndUpdate(userId, cleanUserData, {
       new: true,
     });
 
@@ -92,4 +132,5 @@ module.exports = {
   getAllUsers,
   updateUser,
   deleteUser,
+  changePassword,
 };

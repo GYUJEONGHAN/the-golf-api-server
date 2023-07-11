@@ -1,17 +1,6 @@
 const userService = require("./userService");
 
 //회원가입
-// const signUp = async (req, res, next) => {
-//   try {
-//     const userData = req.body;
-//     const result = await userService.signUp(userData);
-
-//     res.json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 const signUp = async (req, res) => {
   try {
     const userData = req.body;
@@ -104,7 +93,7 @@ const updateUser = async (req, res, next) => {
 };
 
 //회원 탈퇴
-const deleteUser = async (req, re, next) => {
+const deleteUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
 

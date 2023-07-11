@@ -49,14 +49,14 @@ const signIn = async (email, password) => {
   return { token };
 };
 
-// 토큰으로 유저 정보 조회
-const getUserByToken = async (token) => {
-  const tokenInfo = jwt.verify(token, secretKey);
-  const email = tokenInfo.email;
-  const user = await User.findOne({ email });
+// // 토큰으로 유저 정보 조회
+// const getUserByToken = async (token) => {
+//   const tokenInfo = jwt.verify(token, secretKey);
+//   const email = tokenInfo.email;
+//   const user = await User.findOne({ email });
 
-  return user;
-};
+//   return user;
+// };
 
 // 아이디로 유저 정보 조회
 const getUserById = async (userId) => {
@@ -127,7 +127,6 @@ const deleteUser = async (userId) => {
 module.exports = {
   signUp,
   signIn,
-  getUserByToken,
   getUserById,
   getAllUsers,
   updateUser,

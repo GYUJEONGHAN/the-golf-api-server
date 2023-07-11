@@ -36,13 +36,13 @@ const signIn = async (req, res, next) => {
 
 //특정 사용자 정보 조회
 const getUser = async (req, res) => {
-  const { userId } = req.params;
-  const user = await userService.getUserById(userId);
+  try {
+    const { userId } = req.params;
+    const user = await userService.getUserById(userId);
 
-  if (req.user.isAdmin || req.user._id.equals(userid)) {
-    res.json(user);
-  } else {
     res.json({ email: user.email, name: user.name });
+  } catch (error) {
+    next(error);
   }
 };
 

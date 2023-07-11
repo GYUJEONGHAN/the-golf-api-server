@@ -11,6 +11,9 @@ categoryRouter.put("/:categoryId", categoryController.updateCategory);
 // 카테고리 삭제
 categoryRouter.delete("/:categoryId", categoryController.deleteCategory);
 
+// 카테고리 전체 삭제
+categoryRouter.delete("/", categoryController.deleteAllCategories);
+
 // 카테고리 조회
 categoryRouter.get("/:categoryId", categoryController.getCategoryById);
 

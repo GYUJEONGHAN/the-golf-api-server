@@ -9,9 +9,11 @@ const orderSchema = new Schema({
   deliveryTrackingNumber: { type: Number },
   orderDate: { type: Date },
   address: {
-    streetAddress: { type: String },
-    detailAddress: { type: String },
-    postalCode: { type: String },
+    type: {
+      streetAddress: { type: String },
+      detailAddress: { type: String },
+      postalCode: { type: String },
+    },
   },
 });
 

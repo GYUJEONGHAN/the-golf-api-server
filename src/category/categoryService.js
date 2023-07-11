@@ -21,9 +21,23 @@ const deleteCategory = async (categoryId) => {
   return await category.findByIdAndDelete(categoryId);
 };
 
-// 카테고리 조회
+// 모든 카테고리 삭제
+const deleteAllCategories = async () => {
+  try {
+    await category.deleteMany({});
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 카테고리 조회 (id)
 const getCategoryById = async (categoryId) => {
   return await category.findById(categoryId);
+};
+
+// 카테고리 조회 (name)
+const getCategoryByName = async (categoryName) => {
+  return await category.findOne({ categoryName: categoryName });
 };
 
 // 카테고리 목록 조회
@@ -41,7 +55,9 @@ module.exports = {
   createCategory,
   updateCategory,
   deleteCategory,
+  deleteAllCategories,
   getCategoryById,
+  getCategoryByName,
   getAllCategories,
   isValidCategory,
 };

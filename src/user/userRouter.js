@@ -25,6 +25,7 @@ userRouter.get("/", userController.getAllUsers);
 
 //회원 정보 수정
 userRouter.put("/:userId", userController.updateUser);
+userRouter.put("/changePassword/:userId", userController.changePassword);
 
 //회원 탈퇴
 userRouter.delete("/:userId", userController.deleteUser);

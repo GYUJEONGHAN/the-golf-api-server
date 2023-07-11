@@ -88,7 +88,27 @@ const updateUser = async (req, res, next) => {
     res.json(updatedUser);
   } catch (error) {
     console.error(error);
+    // res.json(error);
     next(error);
+  }
+};
+
+const changePassword = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const userData = req.body;
+
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
+    }
+
+    const updatedUser = await userService.changePassword(userId, userData);
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.json(error);
   }
 };
 
@@ -124,4 +144,5 @@ module.exports = {
   signCheck,
   updateUser,
   deleteUser,
+  changePassword,
 };

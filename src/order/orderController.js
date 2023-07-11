@@ -64,6 +64,16 @@ async function deleteOrder(req, res, next) {
   }
 }
 
+// 모든 주문 삭제
+const deleteAllOrders = async (req, res, next) => {
+  try {
+    await orderService.deleteAllOrders();
+    res.status(200).json({ message: "모든 주문이 삭제되었습니다." });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // 주문 조회
 async function getOrder(req, res, next) {
   const { orderId } = req.params;
@@ -95,6 +105,7 @@ module.exports = {
   createOrder,
   updateOrder,
   deleteOrder,
+  deleteAllOrders,
   getOrder,
   getAllOrders,
 };

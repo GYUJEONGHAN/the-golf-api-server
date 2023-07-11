@@ -20,6 +20,15 @@ const deleteOrder = async (orderId) => {
   return deletedOrder;
 };
 
+// 모든 상품 삭제
+const deleteAllOrders = async () => {
+  try {
+    await order.deleteMany({});
+  } catch (error) {
+    throw error;
+  }
+};
+
 // 주문 조회
 const getOrder = async (orderId) => {
   const targetOrder = await order.findById(orderId);
@@ -38,4 +47,5 @@ module.exports = {
   deleteOrder,
   getOrder,
   getAllOrders,
+  deleteAllOrders,
 };

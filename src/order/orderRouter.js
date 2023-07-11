@@ -11,6 +11,8 @@ orderRouter.put("/:orderId", orderController.updateOrder);
 // 주문 삭제
 orderRouter.delete("/:orderId", orderController.deleteOrder);
 
+orderRouter.delete("/", orderController.deleteAllOrders);
+
 // 주문 조회
 orderRouter.get("/:orderId", orderController.getOrder);
 

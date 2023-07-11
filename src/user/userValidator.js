@@ -1,15 +1,14 @@
 const Joi = require("joi");
 
+// 영문자, 특수문자, 숫자 포함하여 8~15자
+const PASSWORD_PATTERN_REGEX =
+  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,15}$/;
+
 const commonUserValidateScheme = {
-  password: Joi.string()
-    .pattern(
-      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,15}$/
-    )
-    .required()
-    .messages({
-      "string.pattern.base": "비밀번호 형식에 맞지 않습니다.",
-      "any.required": "비밀번호는 필수 입력 항목입니다.",
-    }),
+  password: Joi.string().pattern(PASSWORD_PATTERN_REGEX).required().messages({
+    "string.pattern.base": "비밀번호 형식에 맞지 않습니다.",
+    "any.required": "비밀번호는 필수 입력 항목입니다.",
+  }),
   email: Joi.string()
     .email({ tlds: { allow: true } })
     .required()
@@ -43,23 +42,16 @@ const signUpValidator = Joi.object(commonUserValidateScheme);
 
 const changePasswordValidator = Joi.object({
   previousPassword: Joi.string()
-    .pattern(
-      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,15}$/
-    )
+    .pattern(PASSWORD_PATTERN_REGEX)
     .required()
     .messages({
       "string.pattern.base": "기존 비밀번호가 형식에 맞지 않습니다.",
       "any.required": "기존 비밀번호는 필수 입력 항목입니다.",
     }),
-  password: Joi.string()
-    .pattern(
-      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,15}$/
-    )
-    .required()
-    .messages({
-      "string.pattern.base": "비밀번호 형식에 맞지 않습니다.",
-      "any.required": "비밀번호는 필수 입력 항목입니다.",
-    }),
+  password: Joi.string().pattern(PASSWORD_PATTERN_REGEX).required().messages({
+    "string.pattern.base": "비밀번호 형식에 맞지 않습니다.",
+    "any.required": "비밀번호는 필수 입력 항목입니다.",
+  }),
 });
 
 const updateUserValidator = Joi.object({

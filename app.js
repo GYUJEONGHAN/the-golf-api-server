@@ -38,9 +38,9 @@ app.use("/products", productRouter);
 const categoryRouter = require("./src/category/categoryRouter");
 app.use("/category", categoryRouter);
 
-// admin 라우터 등록
-const adminRouter = require("./src/admin/adminRouter");
-app.use("/admin", adminRouter);
+// order 라우터 등록
+const orderRouter = require("./src/order/orderRouter");
+app.use("/order", orderRouter);
 
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기 중");

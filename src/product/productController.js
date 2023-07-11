@@ -28,7 +28,6 @@ const createProduct = async (req, res, next) => {
   }
 };
 
-// 상품 수정
 const updateProduct = async (req, res, next) => {
   try {
     const { productId } = req.params;
@@ -37,9 +36,15 @@ const updateProduct = async (req, res, next) => {
     const existingProduct = await productService.getProductById(productId);
     const previousImagePaths = existingProduct.images || [];
 
+    let newImagePaths = [];
+
+    if (req.files && req.files.length > 0) {
+      newImagePaths = req.files.map((file) => file.path);
+    }
+
     const productData = {
       ...req.body,
-      images: req.files ? req.files.map((file) => file.path) : [],
+      images: [...previousImagePaths, ...newImagePaths],
     };
 
     // 카테고리 ID 유효성 검사
@@ -54,17 +59,27 @@ const updateProduct = async (req, res, next) => {
       }
     }
 
+    // 이미지 파일이 들어왔고, 이전 이미지가 존재한다면 이전 이미지 삭제
+    if (req.files && req.files.length > 0 && previousImagePaths.length > 0) {
+      // 이전 이미지 삭제 로직 추가
+      for (const previousImagePath of previousImagePaths) {
+        // 파일 시스템에서 이미지 파일 삭제하는 로직
+        fs.unlink(previousImagePath, (err) => {
+          if (err) {
+            console.error("이전 이미지 삭제 실패:", err);
+          } else {
+            console.log("이전 이미지 삭제 성공");
+          }
+        });
+      }
+      // 이미지 배열에 req.files로 받은 이미지로 재 할당
+      productData.images = req.files.map((file) => file.path);
+    }
+
     const updatedProduct = await productService.updateProduct(
       productId,
       productData
     );
-
-    // 이미지 파일이 들어왔고, 이전 이미지가 존재한다면 이전 이미지 삭제
-    if (req.files.length > 0 && previousImagePaths.length > 0) {
-      for (const imagePath of previousImagePaths) {
-        fs.unlinkSync(imagePath);
-      }
-    }
 
     res.status(200).json({ updatedProduct });
   } catch (error) {

@@ -5,7 +5,7 @@ const fs = require("fs");
 const upload = require("./multer");
 
 // 상품 생성
-const createProduct = async (req, res) => {
+const createProduct = async (req, res, next) => {
   try {
     const productData = {
       ...req.body,
@@ -17,21 +17,19 @@ const createProduct = async (req, res) => {
       productData.category
     );
     if (!isValidCategory) {
-      return res
-        .status(400)
-        .json({ success: false, error: "유효하지 않은 카테고리입니다." });
+      next(new Error("유효하지 않은 카테고리입니다."));
+      return;
     }
 
     const product = await productService.createProduct(productData);
-    res.status(201).json({ success: true, product });
+    res.status(201).json({ product });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, error: "잘못된 요청입니다." });
+    next(error);
   }
 };
 
 // 상품 수정
-const updateProduct = async (req, res) => {
+const updateProduct = async (req, res, next) => {
   try {
     const { productId } = req.params;
 
@@ -51,9 +49,8 @@ const updateProduct = async (req, res) => {
         productData.category
       );
       if (!isValidCategory) {
-        return res
-          .status(400)
-          .json({ success: false, error: "유효하지 않은 카테고리입니다." });
+        next(new Error("유효하지 않은 카테고리입니다."));
+        return;
       }
     }
 
@@ -69,15 +66,14 @@ const updateProduct = async (req, res) => {
       }
     }
 
-    res.status(200).json({ success: true, product: updatedProduct });
+    res.status(200).json({ updatedProduct });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, error: "잘못된 요청입니다." });
+    next(error);
   }
 };
 
 // 상품 삭제
-const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res, next) => {
   try {
     const { productId } = req.params;
     const existingProduct = await productService.getProductById(productId);
@@ -85,9 +81,8 @@ const deleteProduct = async (req, res) => {
 
     const deletedProduct = await productService.deleteProduct(productId);
     if (!deletedProduct) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+      next(new Error("존재하지 않는 상품입니다."));
+      return;
     }
 
     // 이전 이미지들 삭제
@@ -97,14 +92,14 @@ const deleteProduct = async (req, res) => {
       }
     }
 
-    res.status(200).json({ success: true, message: "삭제 완료" });
+    res.status(200).json({ message: "삭제 완료" });
   } catch (error) {
-    res.status(500).json({ success: false, error: "잘못된 요청입니다." });
+    next(error);
   }
 };
 
 // 모든 상품 삭제
-const deleteAllProducts = async (req, res) => {
+const deleteAllProducts = async (req, res, next) => {
   try {
     // 이미지 폴더 경로
     const imageDirectory = "src/product/productImages/";
@@ -119,55 +114,45 @@ const deleteAllProducts = async (req, res) => {
     });
 
     await productService.deleteAllProducts();
-    res
-      .status(200)
-      .json({ success: true, message: "모든 상품이 삭제되었습니다." });
+    res.status(200).json({ message: "모든 상품이 삭제되었습니다." });
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ success: false, error: "상품 삭제에 실패했습니다." });
+    next(error);
   }
 };
 
-module.exports = {
-  deleteAllProducts,
-};
-
 // 상품 조회
-const getProductById = async (req, res) => {
+const getProductById = async (req, res, next) => {
   try {
     const { productId } = req.params;
     const product = await productService.getProductById(productId);
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+      next(new Error("상품이 존재하지 않습니다."));
+      return;
     }
-    res.status(200).json({ success: true, product });
+    res.status(200).json({ product });
   } catch (error) {
-    res.status(500).json({ success: false, error: "잘못된 요청입니다." });
+    next(error);
   }
 };
 
 // 상품 목록 조회
-const getAllProducts = async (req, res) => {
+const getAllProducts = async (req, res, next) => {
   try {
     const products = await productService.getAllProducts();
-    res.status(200).json({ success: true, products });
+    res.status(200).json({ products });
   } catch (error) {
-    res.status(500).json({ success: false, error: "잘못된 요청입니다." });
+    next(error);
   }
 };
 
 // 상품 검색
-const searchProducts = async (req, res) => {
+const searchProducts = async (req, res, next) => {
   try {
     const { keyword } = req.query;
     const products = await productService.searchProducts(keyword);
-    res.status(200).json({ success: true, products });
+    res.status(200).json({ products });
   } catch (error) {
-    res.status(500).json({ success: false, error: "검색에 실패했습니다." });
+    next(error);
   }
 };
 

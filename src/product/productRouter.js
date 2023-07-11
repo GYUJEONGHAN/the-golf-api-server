@@ -17,6 +17,9 @@ productRouter.put(
   productController.updateProduct
 );
 
+// 상품 검색
+productRouter.get("/search", productController.searchProducts);
+
 // 상품 삭제
 productRouter.delete("/:productId", productController.deleteProduct);
 
@@ -28,8 +31,5 @@ productRouter.get("/:productId", productController.getProductById);
 
 // 상품 목록 조회
 productRouter.get("/", productController.getAllProducts);
-
-// 상품 검색
-productRouter.get("/search", productController.searchProducts);
 
 module.exports = productRouter;

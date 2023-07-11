@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const app = express();
 app.set("port", process.env.PORT || 3000);
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 // MongoDB와의 연결 설정
 
@@ -24,6 +24,12 @@ mongoose
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
+});
+
+// 에러처리 미들웨어
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: "서버 에러 발생" });
 });
 
 // user 라우터 등록

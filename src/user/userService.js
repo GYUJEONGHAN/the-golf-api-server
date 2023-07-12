@@ -46,7 +46,7 @@ const signIn = async (email, password) => {
   const token = jwt.sign({ email: targetUser.email }, secretKey, {
     expiresIn: "24h",
   });
-  return { token };
+  return { token, targetUser };
 };
 
 // // 토큰으로 유저 정보 조회

@@ -49,7 +49,6 @@ const updateProduct = async (req, res, next) => {
 
     // 카테고리 ID 유효성 검사
     if (productData.category) {
-      //만약 카테고리 id가 들어왔다면
       const isValidCategory = await categoryService.isValidCategory(
         productData.category
       );
@@ -63,14 +62,21 @@ const updateProduct = async (req, res, next) => {
     if (req.files && req.files.length > 0 && previousImagePaths.length > 0) {
       // 이전 이미지 삭제 로직 추가
       for (const previousImagePath of previousImagePaths) {
-        // 파일 시스템에서 이미지 파일 삭제하는 로직
-        fs.unlink(previousImagePath, (err) => {
-          if (err) {
-            console.error("이전 이미지 삭제 실패:", err);
-          } else {
-            console.log("이전 이미지 삭제 성공");
-          }
-        });
+        if (fs.existsSync(previousImagePath)) {
+          // 파일 시스템에서 이미지 파일 삭제
+          fs.unlink(previousImagePath, (err) => {
+            if (err) {
+              console.error("이전 이미지 삭제 실패:", err);
+            } else {
+              console.log("이전 이미지 삭제 성공");
+            }
+          });
+        } else {
+          console.log(
+            "경고: 이전 이미지가 존재하지 않습니다 -",
+            previousImagePath
+          );
+        }
       }
       // 이미지 배열에 req.files로 받은 이미지로 재 할당
       productData.images = req.files.map((file) => file.path);

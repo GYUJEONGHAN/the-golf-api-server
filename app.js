@@ -51,6 +51,16 @@ app.use("/category", categoryRouter);
 const orderRouter = require("./src/order/orderRouter");
 app.use("/order", orderRouter);
 
+// CORS 헤더 설정
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기 중");
 });

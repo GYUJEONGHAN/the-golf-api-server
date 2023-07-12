@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const app = express();
 app.set("port", process.env.PORT || 3000);
@@ -22,12 +23,12 @@ mongoose
   .then(() => console.log("Successfully connected to mongodb"))
   .catch((e) => console.error(e));
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 // 모든 도메인에서의 API 요청을 허용하도록 설정
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // 에러처리 미들웨어
 app.use((err, req, res, next) => {
@@ -50,16 +51,6 @@ app.use("/category", categoryRouter);
 // order 라우터 등록
 const orderRouter = require("./src/order/orderRouter");
 app.use("/order", orderRouter);
-
-// CORS 헤더 설정
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
 
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기 중");

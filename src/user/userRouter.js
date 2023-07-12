@@ -37,6 +37,9 @@ userRouter.put("/changePassword/:userId", userController.changePassword);
 //회원 탈퇴
 userRouter.delete("/:userId", userController.deleteUser);
 
+//토큰으로 회원조회
+userRouter.get("/token/:token", userController.getUserByToken);
+
 // userRouter.get("/list", userController.getUserList);
 // userRouter.post("/sign-out", userController.signOut);
 

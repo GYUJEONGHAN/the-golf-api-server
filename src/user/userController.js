@@ -140,6 +140,20 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+const getUserByToken = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+
+    if (!token) {
+      next(new Error("token이 요청되지 않음."));
+    }
+    const user = await userService.getUserByToken(token);
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // 내정보 보기 -> 내 Token -> 해당 토큰의 유저 정보를 출력
 // 모든 회원 조회는 (-> 내 Token -> 해당 토큰이 관리자인지 확인,) -> 모든 유저의 정보 출력
 // 특정 회원 보기 -> 내 Token -> 해당 토큰이 관리자라면 -> 해당 유저 정보 다 보여주기
@@ -154,4 +168,5 @@ module.exports = {
   updateUser,
   deleteUser,
   changePassword,
+  getUserByToken,
 };

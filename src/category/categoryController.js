@@ -2,21 +2,21 @@ const categoryService = require("./categoryService");
 
 const createCategory = async (req, res, next) => {
   try {
-    const { categoryName, parentCategoryName } = req.body;
+    const { categoryName, parentCategoryId } = req.body;
 
     let categoryData = { categoryName };
 
     // 만약 parentCategoryName가 req으로 온 경우
-    if (parentCategoryName) {
-      const parentExists = await categoryService.getCategoryByName(
-        parentCategoryName
+    if (parentCategoryId) {
+      const parentExists = await categoryService.getCategoryById(
+        parentCategoryId
       );
       if (!parentExists) {
         // 부모 카테고리가 존재하지 않는 카테고리라면
         next(new Error("상위 카테고리가 존재하지 않습니다."));
         return;
       }
-      categoryData.parentCategoryName = parentCategoryName;
+      categoryData.parentCategoryId = parentCategoryId;
     }
 
     const category = await categoryService.createCategory(categoryData);
@@ -34,20 +34,18 @@ const updateCategory = async (req, res, next) => {
     const originalCategoryData = await categoryService.getCategoryById(
       categoryId
     );
-    // 부모 카테고리명이 제공된 경우 자신 카테고리 이름이 아닌지 검사
-    if (categoryData.parentCategoryName) {
-      if (
-        originalCategoryData.categoryName === categoryData.parentCategoryName
-      ) {
+    // 부모 카테고리명이 제공된 경우 자신 카테고리 id이 아닌지 검사
+    if (categoryData.parentCategoryId) {
+      if (originalCategoryData._id === categoryData.parentCategoryId) {
         next(new Error("현재 카테고리로 상위 카테고리를 지정할 수 없습니다."));
         return;
       }
     }
 
     // 부모 카테고리명이 제공된 경우 해당 부모 카테고리의 유효성을 검사
-    if (categoryData.parentCategoryName) {
-      const parentCategory = await categoryService.getCategoryByName(
-        categoryData.parentCategoryName
+    if (categoryData.parentCategoryId) {
+      const parentCategory = await categoryService.getCategoryById(
+        categoryData.parentCategoryId
       );
       if (!parentCategory) {
         next(new Error("상위 카테고리를 찾을 수 없습니다."));

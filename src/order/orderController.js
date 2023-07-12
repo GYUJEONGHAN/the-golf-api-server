@@ -28,11 +28,19 @@ async function updateOrder(req, res, next) {
   const orderData = req.body;
 
   try {
-    const targetUser = await user.findById(orderData.userId);
-    const targetProduct = await product.findById(orderData.productId);
-    if (!targetUser || !targetProduct) {
-      next(new Error("유효한 사용자 ID 또는 상품 ID가 아닙니다."));
-      return;
+    if (orderData.userId) {
+      const targetUser = await user.findById(orderData.userId);
+      if (!targetUser) {
+        next(new Error("유효한 사용자 ID가 아닙니다."));
+        return;
+      }
+    }
+    if (orderData.productId) {
+      const targetProduct = await product.findById(orderData.productId);
+      if (!targetProduct) {
+        next(new Error("유효한 상품 ID가 아닙니다."));
+        return;
+      }
     }
 
     const order = await orderService.updateOrder(orderId, orderData);

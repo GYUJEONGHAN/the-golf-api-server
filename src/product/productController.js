@@ -103,7 +103,11 @@ const deleteProduct = async (req, res, next) => {
     // 이전 이미지들 삭제
     if (previousImagePaths.length > 0) {
       for (const imagePath of previousImagePaths) {
-        fs.unlinkSync(imagePath);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        } else {
+          console.log(`경고: 파일이 존재하지 않습니다 - ${imagePath}`);
+        }
       }
     }
 

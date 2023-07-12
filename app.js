@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 
 const app = express();
@@ -24,6 +25,9 @@ mongoose
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+// 모든 도메인에서의 API 요청을 허용하도록 설정
+app.use(cors());
 
 // 에러처리 미들웨어
 app.use((err, req, res, next) => {

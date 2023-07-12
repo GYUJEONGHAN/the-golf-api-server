@@ -36,6 +36,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "서버 에러 발생" });
 });
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 // user 라우터 등록
 const userRouter = require("./src/user/userRouter");
 app.use("/users", userRouter);

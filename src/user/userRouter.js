@@ -4,7 +4,12 @@ const userController = require("./userController");
 const { authMiddleware, adminOnlyMiddleware } = require("./authMiddleware");
 
 // 특정 회원 정보 조회
-userRouter.get("/:userId", userController.getUser);
+userRouter.get(
+  "/:userId",
+  authMiddleware,
+  adminOnlyMiddleware,
+  userController.getUser
+);
 
 // 회원가입
 userRouter.post("/sign-up", userController.signUp);
@@ -13,10 +18,15 @@ userRouter.post("/sign-up", userController.signUp);
 userRouter.post("/sign-in", userController.signIn);
 
 // 로그인/아웃 상태 확인
-userRouter.post("/sign-check", authMiddleware, userController.signCheck);
+//userRouter.post("/sign-check", authMiddleware, userController.signCheck);
 
 // 전체 회원 정보 조회
-userRouter.get("/", userController.getAllUsers);
+userRouter.get(
+  "/",
+  authMiddleware,
+  adminOnlyMiddleware,
+  userController.getAllUsers
+);
 
 //회원 정보 수정(비밀번호 제외)
 userRouter.put("/:userId", userController.updateUser);

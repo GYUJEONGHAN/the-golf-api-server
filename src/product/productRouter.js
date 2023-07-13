@@ -24,7 +24,7 @@ productRouter.get("/search", productController.searchProducts);
 productRouter.delete("/:productId", productController.deleteProduct);
 
 // 모든 상품 삭제
-productRouter.delete("/", productController.deleteAllProducts);
+// productRouter.delete("/", productController.deleteAllProducts);
 
 // 상품 조회
 productRouter.get("/:productId", productController.getProductById);

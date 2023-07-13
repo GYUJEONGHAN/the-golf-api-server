@@ -12,7 +12,7 @@ categoryRouter.put("/:categoryId", categoryController.updateCategory);
 categoryRouter.delete("/:categoryId", categoryController.deleteCategory);
 
 // 카테고리 전체 삭제
-categoryRouter.delete("/", categoryController.deleteAllCategories);
+// categoryRouter.delete("/", categoryController.deleteAllCategories);
 
 // 카테고리 조회
 categoryRouter.get("/:categoryId", categoryController.getCategoryById);

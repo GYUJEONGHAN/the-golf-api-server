@@ -12,7 +12,7 @@ orderRouter.put("/:orderId", orderController.updateOrder);
 orderRouter.delete("/:orderId", orderController.deleteOrder);
 
 // 모든 주문 삭제
-orderRouter.delete("/", orderController.deleteAllOrders);
+// orderRouter.delete("/", orderController.deleteAllOrders);
 
 // 주문 조회
 orderRouter.get("/:orderId", orderController.getOrder);

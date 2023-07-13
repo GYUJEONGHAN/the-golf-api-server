@@ -127,7 +127,7 @@ const deleteProduct = async (req, res, next) => {
 const deleteAllProducts = async (req, res, next) => {
   try {
     // 이미지 폴더 경로
-    const imageDirectory = "src/product/productImages/";
+    const imageDirectory = "public/productImages/";
 
     // 폴더 내의 모든 파일과 폴더 가져오기
     const files = fs.readdirSync(imageDirectory);
@@ -135,7 +135,11 @@ const deleteAllProducts = async (req, res, next) => {
     // 파일과 폴더 삭제
     files.forEach((file) => {
       const filePath = imageDirectory + file;
-      fs.unlinkSync(filePath);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      } else {
+        console.log(`경고: 파일이 존재하지 않습니다 - ${imagePath}`);
+      }
     });
 
     await productService.deleteAllProducts();

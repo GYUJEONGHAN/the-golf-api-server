@@ -7,6 +7,7 @@ const productSchema = new Schema({
     ref: "Category",
     required: true,
   },
+  categoryName: { type: String },
   name: { type: String, required: true },
   price: { type: Number, required: true },
   images: [{ type: String }], // 복수의 이미지를 배열로 저장

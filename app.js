@@ -30,12 +30,6 @@ app.use(
   })
 );
 
-// 에러처리 미들웨어
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: "서버 에러 발생" });
-});
-
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
@@ -55,6 +49,12 @@ app.use("/category", categoryRouter);
 // order 라우터 등록
 const orderRouter = require("./src/order/orderRouter");
 app.use("/order", orderRouter);
+
+// 에러처리 미들웨어
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: err }); // 에러 객체로 응답
+});
 
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기 중");

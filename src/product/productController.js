@@ -12,6 +12,12 @@ const createProduct = async (req, res, next) => {
       images: req.files ? req.files.map((file) => file.path) : [], // 여러 이미지 처리
     };
 
+    const targetCategory = await categoryService.getCategoryById(
+      productData.category
+    );
+
+    productData.categoryName = targetCategory.categoryName;
+
     // 카테고리 ID 유효성 검사
     const isValidCategory = await categoryService.isValidCategory(
       productData.category

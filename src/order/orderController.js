@@ -7,16 +7,16 @@ async function createOrder(req, res, next) {
   const orderData = req.body;
 
   try {
-    // 유효한 userId, productId인지 확인
+    // 유효한 userId 확인
     const targetUser = await user.findById(orderData.userId);
-    const targetProduct = await product.findById(orderData.productId);
-    if (!targetUser || !targetProduct) {
-      next(new Error("사용자 또는 상품 id가 유효하지 않습니다."));
+    if (!targetUser) {
+      next("유효하지 않은 사용자 ID입니다.");
       return;
     }
 
+    // 주문 데이터 생성
     const order = await orderService.createOrder(orderData);
-    res.status(201).json({ success: true, order });
+    res.status(201).json({ order });
   } catch (error) {
     next(error);
   }
@@ -26,30 +26,26 @@ async function createOrder(req, res, next) {
 async function updateOrder(req, res, next) {
   const { orderId } = req.params;
   const orderData = req.body;
-
+  console.log(orderData);
   try {
+    // 주문 ID가 유효한지 확인
+    const targetOrder = await orderService.getOrder(orderId);
+    if (!targetOrder) {
+      next("주문 ID가 유효하지 않습니다.");
+    }
+
+    // 사용자 Id 유효성 검사
     if (orderData.userId) {
       const targetUser = await user.findById(orderData.userId);
       if (!targetUser) {
-        next(new Error("유효한 사용자 ID가 아닙니다."));
-        return;
-      }
-    }
-    if (orderData.productId) {
-      const targetProduct = await product.findById(orderData.productId);
-      if (!targetProduct) {
-        next(new Error("유효한 상품 ID가 아닙니다."));
+        next("유효한 사용자 ID가 아닙니다.");
         return;
       }
     }
 
-    const order = await orderService.updateOrder(orderId, orderData);
-    if (!order) {
-      next(new Error("주문 ID가 유효하지 않습니다."));
-      return;
-    }
-
-    res.json({ order });
+    // 주문 업데이트
+    const updatedOrder = await orderService.updateOrder(orderId, orderData);
+    res.json({ updatedOrder });
   } catch (error) {
     next(error);
   }
@@ -62,7 +58,7 @@ async function deleteOrder(req, res, next) {
   try {
     const order = await orderService.deleteOrder(orderId);
     if (!order) {
-      next(new Error("주문 ID가 유효하지 않습니다."));
+      next("주문 ID가 유효하지 않습니다.");
       return;
     }
 
@@ -89,7 +85,7 @@ async function getOrder(req, res, next) {
   try {
     const order = await orderService.getOrder(orderId);
     if (!order) {
-      next(new Error("주문 ID가 유효하지 않습니다."));
+      next("주문 ID가 유효하지 않습니다.");
       return;
     }
 

@@ -84,7 +84,7 @@ const updateUser = async (req, res, next) => {
     const user = await userService.getUserById(userId);
     if (!user) {
       //return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
-      next(new Error(""));
+      next("사용자를 찾을 수 없습니다.");
       return;
     }
 
@@ -145,7 +145,7 @@ const getUserByToken = async (req, res, next) => {
     const { token } = req.params;
 
     if (!token) {
-      next(new Error("token이 요청되지 않음."));
+      next("token이 요청되지 않음.");
     }
     const user = await userService.getUserByToken(token);
     res.json(user);

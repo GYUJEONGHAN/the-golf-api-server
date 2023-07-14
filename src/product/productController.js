@@ -23,7 +23,7 @@ const createProduct = async (req, res, next) => {
       productData.category
     );
     if (!isValidCategory) {
-      next(new Error("유효하지 않은 카테고리입니다."));
+      next("유효하지 않은 카테고리입니다.");
       return;
     }
 
@@ -59,7 +59,7 @@ const updateProduct = async (req, res, next) => {
         productData.category
       );
       if (!isValidCategory) {
-        next(new Error("유효하지 않은 카테고리입니다."));
+        next("유효하지 않은 카테고리입니다.");
         return;
       }
     }
@@ -108,7 +108,7 @@ const deleteProduct = async (req, res, next) => {
 
     const deletedProduct = await productService.deleteProduct(productId);
     if (!deletedProduct) {
-      next(new Error("존재하지 않는 상품입니다."));
+      next("존재하지 않는 상품입니다.");
       return;
     }
 
@@ -159,9 +159,10 @@ const deleteAllProducts = async (req, res, next) => {
 const getProductById = async (req, res, next) => {
   try {
     const { productId } = req.params;
+    console.log(productId);
     const product = await productService.getProductById(productId);
     if (!product) {
-      next(new Error("상품이 존재하지 않습니다."));
+      next("상품이 존재하지 않습니다.");
       return;
     }
     res.status(200).json({ product });

@@ -1,6 +1,14 @@
 const jwt = require("jsonwebtoken");
 const userService = require("./userService");
 
+const adminOnlyMiddleware = async (req, res, next) => {
+  if (req.user.isAdmin) {
+    next();
+  } else {
+    res.status(403).json({ error: "접근 권한이 없습니다." });
+  }
+};
+
 const authMiddleware = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
@@ -17,10 +25,10 @@ const authMiddleware = async (req, res, next) => {
 
     // 자기 자신인지 확인
     const userId = req.params.userId;
-    if (userId !== user.id) {
-      req.isAdminOverride = false; // adminOnlyMiddleware 무시를 위한 플래그 설정
+    if (userId === user.id) {
+      req.user.isSelf = true;
     } else {
-      req.isAdminOverride = true; // 자기 자신인 경우 adminOnlyMiddleware 무시하기 위해 true로 설정
+      req.user.isSelf = false;
     }
 
     next();
@@ -29,12 +37,4 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-const adminOnlyMiddleware = async (req, res, next) => {
-  if (req.isAdminOverride || req.user.isAdmin) {
-    next();
-  } else {
-    res.status(403).json({ error: "접근 권한이 없습니다." });
-  }
-};
-
-module.exports = { authMiddleware, adminOnlyMiddleware };
+module.exports = { adminOnlyMiddleware, authMiddleware };

@@ -12,6 +12,7 @@ const orderSchema = new Schema({
       },
       orderCount: { type: Number, required: true },
       price: { type: Number, required: true }, // 각 상품의 가격
+      size: [{ type: String }],
       subtotal: { type: Number, required: true }, // 각 상품별 주문 금액
     },
   ],

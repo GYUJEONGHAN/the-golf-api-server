@@ -13,7 +13,7 @@ const createCategory = async (req, res, next) => {
       );
       if (!parentExists) {
         // 부모 카테고리가 존재하지 않는 카테고리라면
-        next(new Error("상위 카테고리가 존재하지 않습니다."));
+        next("상위 카테고리가 존재하지 않습니다.");
         return;
       }
       categoryData.parentCategoryId = parentCategoryId;
@@ -37,7 +37,7 @@ const updateCategory = async (req, res, next) => {
     // 부모 카테고리명이 제공된 경우 자신 카테고리 id이 아닌지 검사
     if (categoryData.parentCategoryId) {
       if (originalCategoryData._id === categoryData.parentCategoryId) {
-        next(new Error("현재 카테고리로 상위 카테고리를 지정할 수 없습니다."));
+        next("현재 카테고리로 상위 카테고리를 지정할 수 없습니다.");
         return;
       }
     }
@@ -48,7 +48,7 @@ const updateCategory = async (req, res, next) => {
         categoryData.parentCategoryId
       );
       if (!parentCategory) {
-        next(new Error("상위 카테고리를 찾을 수 없습니다."));
+        next("상위 카테고리를 찾을 수 없습니다.");
         return;
       }
     }
@@ -59,7 +59,7 @@ const updateCategory = async (req, res, next) => {
     );
 
     if (!updatedCategory) {
-      next(new Error("category not found"));
+      next("category not found");
       return;
     }
 
@@ -75,7 +75,7 @@ const deleteCategory = async (req, res, next) => {
     const { categoryId } = req.params;
     const deletedCategory = await categoryService.deleteCategory(categoryId);
     if (!deletedCategory) {
-      next(new Error("category not found"));
+      next("category not found");
       return;
     }
     res.status(200).json({ message: "삭제 완료" });
@@ -100,7 +100,7 @@ const getCategoryById = async (req, res, next) => {
     const { categoryId } = req.params;
     const category = await categoryService.getCategoryById(categoryId);
     if (!category) {
-      next(new Error("category not found"));
+      next("category not found");
       return;
     }
     res.status(200).json({ category });

@@ -6,7 +6,7 @@ const createOrder = async (orderData) => {
   return await targetOrder.save();
 };
 
-// 카테고리 수정
+// 주문 수정
 const updateOrder = async (orderId, orderData) => {
   const updatedOrder = await order.findByIdAndUpdate(orderId, orderData, {
     new: true,
@@ -20,7 +20,7 @@ const deleteOrder = async (orderId) => {
   return deletedOrder;
 };
 
-// 모든 상품 삭제
+// 모든 주문 삭제
 const deleteAllOrders = async () => {
   try {
     await order.deleteMany({});
